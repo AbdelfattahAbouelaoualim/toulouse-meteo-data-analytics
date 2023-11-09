@@ -1,0 +1,5 @@
+apache-airflow==2.3.0  # Remplacez par la version d'Airflow que vous utilisez
+google-cloud-bigquery==2.34.0  # Client BigQuery pour Python
+google-cloud-storage==1.44.0  # Client Storage pour Python
+requests==2.27.1  # Pour faire des requêtes HTTP à l'API
+pytest==7.1.2  # Pour les tests unitaires

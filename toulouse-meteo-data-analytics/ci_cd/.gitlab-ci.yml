@@ -1,0 +1,43 @@
+stages:
+  - lint
+  - test
+  - build
+  - deploy
+
+variables:
+  # Définissez ici les variables d'environnement requises pour les étapes de CI/CD
+  TF_VAR_project_id: $PROJECT_ID
+  TF_VAR_region: $REGION
+
+before_script:
+  # Installez les dépendances ici (par exemple, terraform, gcloud, etc.)
+  - apt-get update && apt-get install -y python3-pip terraform
+  - pip3 install -r requirements.txt
+
+lint:
+  stage: lint
+  script:
+    - flake8 .
+
+unit_tests:
+  stage: test
+  script:
+    - pytest tests/
+
+build:
+  stage: build
+  script:
+    - echo "Build step not required for Terraform projects"
+
+deploy:
+  stage: deploy
+  script:
+    - terraform init -backend-config=backend.tfvars iac/
+    - terraform apply -var-file=envs/prod.tfvars -auto-approve iac/
+  only:
+    - main # ou le nom de la branche que vous utilisez pour les déploiements
+
+# Note: Assurez-vous d'avoir configuré les variables d'environnement PROJECT_ID et REGION dans les paramètres CI/CD de votre projet GitLab.
+# Note: Vous pouvez avoir besoin d'ajouter des étapes de configuration supplémentaires pour gcloud ou d'autres outils si nécessaire.
+# Note: La commande terraform init doit pointer vers votre fichier de configuration backend spécifique si vous utilisez un état distant.
+# Note: La commande terraform apply doit être configurée avec le bon fichier de variables d'environnement correspondant à votre environnement de déploiement.
